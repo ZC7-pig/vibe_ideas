@@ -1,0 +1,166 @@
+<!--pages/adoption/list.wxml-->
+<view class="page-container">
+  <!-- 页面头部 -->
+  <view class="header-section">
+    <text class="header-title">流浪动物收养</text>
+    <text class="header-desc">给它们一个温暖的家</text>
+  </view>
+
+  <!-- 收养列表 -->
+  <view class="adoption-container">
+    <block wx:if="{{loading}}">
+      <view class="loading">
+        <text>加载中...</text>
+      </view>
+    </block>
+    
+    <block wx:elif="{{adoptions.length > 0}}">
+      <view class="adoption-item" 
+            wx:for="{{adoptions}}" 
+            wx:key="_id"
+            bindtap="onAdoptionTap"
+            data-id="{{item._id}}">
+        
+        <!-- 宠物图片 -->
+        <view class="pet-images">
+          <swiper class="image-swiper" indicator-dots="{{item.images.length > 1}}" autoplay="false">
+            <swiper-item wx:for="{{item.images}}" wx:key="index" wx:for-item="image">
+              <image class="pet-image" src="{{image}}" mode="aspectFill"></image>
+            </swiper-item>
+          </swiper>
+          <view class="status-tag {{item.adoptStatus}}">
+            {{item.adoptStatusText}}
+          </view>
+        </view>
+
+        <!-- 宠物信息 -->
+        <view class="pet-info">
+          <text class="pet-title">{{item.title}}</text>
+          
+          <view class="pet-details">
+            <view class="detail-row">
+              <text class="detail-label">品种：</text>
+              <text class="detail-value">{{item.breed}}</text>
+            </view>
+            <view class="detail-row">
+              <text class="detail-label">毛色：</text>
+              <text class="detail-value">{{item.color}}</text>
+            </view>
+            <view class="detail-row">
+              <text class="detail-label">地点：</text>
+              <text class="detail-value">{{item.location.name}}</text>
+            </view>
+            <view class="detail-row" wx:if="{{item.age}}">
+              <text class="detail-label">年龄：</text>
+              <text class="detail-value">{{item.age}}</text>
+            </view>
+            <view class="detail-row" wx:if="{{item.health}}">
+              <text class="detail-label">健康：</text>
+              <text class="detail-value">{{item.health}}</text>
+            </view>
+          </view>
+
+          <text class="pet-description">{{item.description}}</text>
+
+          <!-- 发布者信息 -->
+          <view class="publisher-info" wx:if="{{item.userInfo}}">
+            <image class="publisher-avatar" src="{{item.userInfo.avatarUrl}}" mode="aspectFill"></image>
+            <view class="publisher-details">
+              <text class="publisher-name">{{item.userInfo.nickName}}</text>
+              <text class="publish-time">{{item.createTimeText}}</text>
+            </view>
+          </view>
+          <view class="publisher-info" wx:else>
+            <view class="publisher-details">
+              <text class="publish-time">{{item.createTimeText}}</text>
+            </view>
+          </view>
+
+          <!-- 操作按钮 -->
+          <view class="action-buttons" wx:if="{{item.adoptStatus === 'pending'}}">
+            <button class="action-btn secondary" 
+                    bindtap="onContactTap" 
+                    data-contact="{{item.contact}}"
+                    catchtap="true">
+              联系发布者
+            </button>
+            <button class="action-btn primary" 
+                    bindtap="onApplyTap" 
+                    data-id="{{item._id}}"
+                    catchtap="true">
+              申请领养
+            </button>
+          </view>
+        </view>
+      </view>
+    </block>
+
+    <block wx:else>
+      <view class="empty-state">
+        <text class="empty-icon">🐾</text>
+        <text class="empty-text">暂无待领养信息</text>
+        <text class="empty-desc">快来发布第一条收养信息吧</text>
+        <button class="empty-btn" bindtap="onPublishTap">发布收养信息</button>
+      </view>
+    </block>
+  </view>
+
+  <!-- 加载更多 -->
+  <view class="load-more" wx:if="{{hasMore && !loading}}">
+    <text bindtap="loadMore">加载更多</text>
+  </view>
+
+  <!-- 救助站信息 -->
+  <view class="rescue-section">
+    <text class="section-title">合作救助站</text>
+    <view class="rescue-list">
+      <view class="rescue-item" wx:for="{{rescueStations}}" wx:key="id">
+        <view class="rescue-info">
+          <text class="rescue-name">{{item.name}}</text>
+          <text class="rescue-address">{{item.address}}</text>
+        </view>
+        <button class="rescue-contact" 
+                bindtap="onCallRescue" 
+                data-phone="{{item.phone}}">
+          联系
+        </button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 申请领养弹窗 -->
+  <view class="apply-modal" wx:if="{{showApplyModal}}" bindtap="onCloseApplyModal">
+    <view class="apply-content" catchtap="stopPropagation">
+      <view class="apply-header">
+        <text class="apply-title">申请领养</text>
+        <icon class="apply-close" type="cancel" size="20" bindtap="onCloseApplyModal"></icon>
+      </view>
+      
+      <form bindsubmit="onSubmitApplication">
+        <view class="apply-form">
+          <view class="form-item">
+            <text class="form-label">姓名 *</text>
+            <input class="form-input" name="name" placeholder="请输入您的姓名" value="{{applicationForm.name}}"/>
+          </view>
+          <view class="form-item">
+            <text class="form-label">联系方式 *</text>
+            <input class="form-input" name="contact" placeholder="请输入手机号或微信号" value="{{applicationForm.contact}}"/>
+          </view>
+          <view class="form-item">
+            <text class="form-label">居住环境</text>
+            <textarea class="form-textarea" name="environment" placeholder="请简述您的居住环境和养宠条件" value="{{applicationForm.environment}}"></textarea>
+          </view>
+          <view class="form-item">
+            <text class="form-label">养宠经验</text>
+            <textarea class="form-textarea" name="experience" placeholder="请简述您的养宠经验" value="{{applicationForm.experience}}"></textarea>
+          </view>
+        </view>
+        
+        <view class="apply-actions">
+          <button class="apply-btn secondary" bindtap="onCloseApplyModal">取消</button>
+          <button class="apply-btn primary" formType="submit">提交申请</button>
+        </view>
+      </form>
+    </view>
+  </view>
+</view>

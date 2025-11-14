@@ -1,0 +1,250 @@
+/* pages/notifications/index.wxss */
+
+.page-container {
+  padding-bottom: 120rpx;
+}
+
+/* 筛选栏 */
+.filter-container {
+  background-color: var(--white);
+  padding: 20rpx;
+  border-bottom: 1rpx solid var(--border-color);
+  display: flex;
+  gap: 20rpx;
+}
+
+.filter-item {
+  padding: 12rpx 24rpx;
+  border-radius: 30rpx;
+  font-size: 26rpx;
+  color: var(--text-light);
+  background-color: var(--background-color);
+  transition: all 0.3s ease;
+}
+
+.filter-item.active {
+  background-color: var(--primary-color);
+  color: var(--white);
+}
+
+/* 通知列表 */
+.notifications-container {
+  padding: 0 20rpx;
+}
+
+.notification-item {
+  background-color: var(--white);
+  border-radius: 16rpx;
+  margin-bottom: 20rpx;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.notification-item.unread {
+  border-left: 6rpx solid var(--primary-color);
+}
+
+.notification-item:active {
+  transform: scale(0.98);
+}
+
+/* 通知内容 */
+.notification-content {
+  display: flex;
+  align-items: flex-start;
+  padding: 24rpx;
+}
+
+.notification-icon {
+  position: relative;
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 50%;
+  background-color: var(--background-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20rpx;
+  flex-shrink: 0;
+}
+
+.icon-text {
+  font-size: 24rpx;
+}
+
+.unread-dot {
+  position: absolute;
+  top: 8rpx;
+  right: 8rpx;
+  width: 16rpx;
+  height: 16rpx;
+  background-color: var(--primary-color);
+  border-radius: 50%;
+}
+
+.notification-info {
+  flex: 1;
+  margin-right: 20rpx;
+}
+
+.notification-message {
+  font-size: 28rpx;
+  color: var(--text-color);
+  line-height: 1.5;
+  margin-bottom: 12rpx;
+  display: block;
+}
+
+.notification-meta {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+}
+
+.notification-time {
+  font-size: 22rpx;
+  color: var(--text-lighter);
+}
+
+.notification-score {
+  font-size: 22rpx;
+  color: var(--primary-color);
+  font-weight: 500;
+}
+
+.notification-actions {
+  flex-shrink: 0;
+}
+
+.action-btn {
+  background-color: var(--primary-color);
+  color: var(--white);
+  padding: 12rpx 20rpx;
+  border-radius: 20rpx;
+  font-size: 24rpx;
+  border: none;
+}
+
+.action-btn:active {
+  opacity: 0.8;
+}
+
+/* 相关帖子预览 */
+.related-post {
+  display: flex;
+  align-items: center;
+  padding: 20rpx 24rpx;
+  background-color: var(--background-color);
+  border-top: 1rpx solid var(--border-color);
+}
+
+.related-image {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 8rpx;
+  margin-right: 16rpx;
+  flex-shrink: 0;
+}
+
+.related-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.related-title {
+  font-size: 26rpx;
+  color: var(--text-color);
+  font-weight: 500;
+  margin-bottom: 8rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.related-meta {
+  font-size: 22rpx;
+  color: var(--text-light);
+}
+
+/* 空状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 120rpx 40rpx;
+  text-align: center;
+}
+
+.empty-icon {
+  font-size: 80rpx;
+  margin-bottom: 20rpx;
+  opacity: 0.5;
+}
+
+.empty-text {
+  font-size: 32rpx;
+  color: var(--text-light);
+  margin-bottom: 12rpx;
+}
+
+.empty-desc {
+  font-size: 26rpx;
+  color: var(--text-lighter);
+}
+
+/* 加载更多 */
+.load-more {
+  text-align: center;
+  padding: 40rpx;
+  color: var(--text-light);
+  font-size: 28rpx;
+}
+
+/* 操作栏 */
+.action-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--white);
+  padding: 20rpx 32rpx;
+  padding-bottom: calc(20rpx + env(safe-area-inset-bottom));
+  border-top: 1rpx solid var(--border-color);
+  display: flex;
+  gap: 20rpx;
+}
+
+.action-btn-large {
+  flex: 1;
+  height: 72rpx;
+  border-radius: 36rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+  border: none;
+}
+
+.action-btn-large.primary {
+  background-color: var(--primary-color);
+  color: var(--white);
+}
+
+.action-btn-large.secondary {
+  background-color: var(--background-color);
+  color: var(--text-light);
+}
+
+.action-btn-large:active {
+  opacity: 0.8;
+}
+
+/* 加载状态 */
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 80rpx;
+  color: var(--text-lighter);
+  font-size: 28rpx;
+}

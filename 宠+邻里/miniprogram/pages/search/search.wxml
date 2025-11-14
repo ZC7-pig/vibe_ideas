@@ -1,0 +1,229 @@
+<!--搜索页面-->
+<view class="search-container">
+  <!-- 搜索栏 -->
+  <view class="search-header">
+    <view class="search-input-wrapper">
+      <input 
+        class="search-input" 
+        placeholder="搜索宠物信息..." 
+        value="{{searchKeyword}}"
+        bindinput="onSearchInput"
+        bindconfirm="onSearchConfirm"
+        focus="{{searchFocus}}"
+        confirm-type="search"
+      />
+      <view class="search-btn" bindtap="onSearchConfirm">
+        <text class="search-icon">🔍</text>
+      </view>
+    </view>
+    <view class="cancel-btn" bindtap="goBack">取消</view>
+  </view>
+
+  <!-- 搜索历史 -->
+  <view wx:if="{{!hasSearched && searchHistory.length > 0}}" class="search-history">
+    <view class="history-header">
+      <view class="history-title">搜索历史</view>
+      <view class="clear-history" bindtap="clearHistory">清空</view>
+    </view>
+    <view class="history-tags">
+      <view 
+        wx:for="{{searchHistory}}" 
+        wx:key="index" 
+        class="history-tag"
+        bindtap="searchFromHistory"
+        data-keyword="{{item}}"
+      >
+        {{item}}
+      </view>
+    </view>
+  </view>
+
+  <!-- 热门搜索 -->
+  <view wx:if="{{!hasSearched}}" class="hot-search">
+    <view class="hot-title">热门搜索</view>
+    <view class="hot-tags">
+      <view 
+        wx:for="{{hotKeywords}}" 
+        wx:key="index" 
+        class="hot-tag"
+        bindtap="searchFromHot"
+        data-keyword="{{item}}"
+      >
+        {{item}}
+      </view>
+    </view>
+  </view>
+
+  <!-- 搜索结果 -->
+  <view wx:if="{{hasSearched}}" class="search-results">
+    <!-- 筛选条件 -->
+    <view class="filter-bar">
+      <scroll-view class="filter-scroll" scroll-x="{{true}}">
+        <view class="filter-items">
+          <view 
+            class="filter-item {{activeFilter === 'all' ? 'active' : ''}}"
+            bindtap="switchFilter"
+            data-filter="all"
+          >
+            全部
+          </view>
+          <view 
+            class="filter-item {{activeFilter === 'lost' ? 'active' : ''}}"
+            bindtap="switchFilter"
+            data-filter="lost"
+          >
+            寻宠
+          </view>
+          <view 
+            class="filter-item {{activeFilter === 'found' ? 'active' : ''}}"
+            bindtap="switchFilter"
+            data-filter="found"
+          >
+            捡到
+          </view>
+          <view 
+            class="filter-item {{activeFilter === 'adoption' ? 'active' : ''}}"
+            bindtap="switchFilter"
+            data-filter="adoption"
+          >
+            领养
+          </view>
+          <view 
+            class="filter-item {{activeFilter === 'normal' ? 'active' : ''}}"
+            bindtap="switchFilter"
+            data-filter="normal"
+          >
+            日常
+          </view>
+        </view>
+      </scroll-view>
+      <view class="sort-btn" bindtap="showSortOptions">
+        <text class="sort-text">{{sortText}}</text>
+        <text class="sort-arrow">▼</text>
+      </view>
+    </view>
+
+    <!-- 结果统计 -->
+    <view class="result-stats">
+      找到 {{totalCount}} 条相关结果
+    </view>
+
+    <!-- 搜索结果列表 -->
+    <scroll-view 
+      class="results-list" 
+      scroll-y="{{true}}"
+      bindscrolltolower="loadMoreResults"
+      refresher-enabled="{{true}}"
+      refresher-triggered="{{refreshing}}"
+      bindrefresherrefresh="onRefresh"
+    >
+      <!-- 加载中 -->
+      <view wx:if="{{loading && results.length === 0}}" class="loading-container">
+        <view class="loading-spinner"></view>
+        <view class="loading-text">搜索中...</view>
+      </view>
+
+      <!-- 搜索结果 -->
+      <view wx:elif="{{results.length > 0}}" class="result-items">
+        <view 
+          wx:for="{{results}}" 
+          wx:key="id" 
+          class="result-item"
+          bindtap="viewPost"
+          data-id="{{item.id}}"
+        >
+          <!-- 帖子图片 -->
+          <view class="result-image">
+            <image 
+              wx:if="{{item.images && item.images.length > 0}}"
+              src="{{item.images[0]}}" 
+              mode="aspectFill" 
+            />
+            <view wx:else class="no-image">📷</view>
+          </view>
+
+          <!-- 帖子信息 -->
+          <view class="result-content">
+            <view class="result-header">
+              <view class="post-type {{item.type}}">{{item.typeText}}</view>
+              <view class="post-time">{{item.createTimeRelative}}</view>
+            </view>
+            
+            <view class="result-title">{{item.title}}</view>
+            <view class="result-description">{{item.description}}</view>
+            
+            <!-- 宠物标签 -->
+            <view wx:if="{{item.petInfo}}" class="pet-tags">
+              <view wx:if="{{item.petInfo.breed}}" class="pet-tag">{{item.petInfo.breed}}</view>
+              <view wx:if="{{item.petInfo.color}}" class="pet-tag">{{item.petInfo.color}}</view>
+              <view wx:if="{{item.petInfo.sex}}" class="pet-tag">{{item.petInfo.sex}}</view>
+            </view>
+            
+            <!-- 位置信息 -->
+            <view wx:if="{{item.location}}" class="result-location">
+              <text class="location-icon">📍</text>
+              <text class="location-text">{{item.location.address}}</text>
+              <text wx:if="{{item.distance}}" class="distance-text">{{item.distance}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 空状态 -->
+      <view wx:else class="empty-container">
+        <view class="empty-icon">🔍</view>
+        <view class="empty-text">没有找到相关结果</view>
+        <view class="empty-tip">试试其他关键词或筛选条件</view>
+      </view>
+
+      <!-- 加载更多 -->
+      <view wx:if="{{hasMore && results.length > 0}}" class="load-more">
+        <view wx:if="{{loadingMore}}" class="loading-more">
+          <view class="loading-spinner small"></view>
+          <text>加载中...</text>
+        </view>
+        <view wx:else class="load-more-btn" bindtap="loadMoreResults">
+          点击加载更多
+        </view>
+      </view>
+
+      <!-- 没有更多 -->
+      <view wx:if="{{!hasMore && results.length > 0}}" class="no-more">
+        没有更多结果了
+      </view>
+    </scroll-view>
+  </view>
+</view>
+
+<!-- 排序选项弹窗 -->
+<view wx:if="{{showSortModal}}" class="sort-modal" bindtap="hideSortOptions">
+  <view class="sort-content" catchtap="stopPropagation">
+    <view class="sort-title">排序方式</view>
+    <view class="sort-options">
+      <view 
+        class="sort-option {{sortType === 'time' ? 'active' : ''}}"
+        bindtap="selectSort"
+        data-sort="time"
+      >
+        <text class="option-text">按时间排序</text>
+        <text wx:if="{{sortType === 'time'}}" class="check-icon">✓</text>
+      </view>
+      <view 
+        class="sort-option {{sortType === 'distance' ? 'active' : ''}}"
+        bindtap="selectSort"
+        data-sort="distance"
+      >
+        <text class="option-text">按距离排序</text>
+        <text wx:if="{{sortType === 'distance'}}" class="check-icon">✓</text>
+      </view>
+      <view 
+        class="sort-option {{sortType === 'relevance' ? 'active' : ''}}"
+        bindtap="selectSort"
+        data-sort="relevance"
+      >
+        <text class="option-text">按相关度排序</text>
+        <text wx:if="{{sortType === 'relevance'}}" class="check-icon">✓</text>
+      </view>
+    </view>
+  </view>
+</view>

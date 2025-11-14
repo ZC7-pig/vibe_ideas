@@ -1,0 +1,225 @@
+<!--pages/post/edit.wxml-->
+<view class="page-container">
+  <!-- 类型选择 -->
+  <view class="type-selector">
+    <scroll-view class="type-scroll" scroll-x="true">
+      <view class="type-item {{currentType === 'lost' ? 'active' : ''}}" 
+            data-type="lost" bindtap="onTypeChange">
+        <text class="type-icon">🔍</text>
+        <text class="type-text">寻宠</text>
+      </view>
+      <view class="type-item {{currentType === 'found' ? 'active' : ''}}" 
+            data-type="found" bindtap="onTypeChange">
+        <text class="type-icon">👀</text>
+        <text class="type-text">发现</text>
+      </view>
+      <view class="type-item {{currentType === 'foster' ? 'active' : ''}}" 
+            data-type="foster" bindtap="onTypeChange">
+        <text class="type-icon">🏠</text>
+        <text class="type-text">寄养</text>
+      </view>
+      <view class="type-item {{currentType === 'breed' ? 'active' : ''}}" 
+            data-type="breed" bindtap="onTypeChange">
+        <text class="type-icon">💕</text>
+        <text class="type-text">配种</text>
+      </view>
+      <view class="type-item {{currentType === 'adopt' ? 'active' : ''}}" 
+            data-type="adopt" bindtap="onTypeChange">
+        <text class="type-icon">🤗</text>
+        <text class="type-text">收养</text>
+      </view>
+      <view class="type-item {{currentType === 'activity' ? 'active' : ''}}" 
+            data-type="activity" bindtap="onTypeChange">
+        <text class="type-icon">🎉</text>
+        <text class="type-text">活动</text>
+      </view>
+      <view class="type-item {{currentType === 'service' ? 'active' : ''}}" 
+            data-type="service" bindtap="onTypeChange">
+        <text class="type-icon">🏥</text>
+        <text class="type-text">服务</text>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 表单内容 -->
+  <form bindsubmit="onSubmit">
+    <view class="form-container">
+      <!-- 标题 -->
+      <view class="input-group">
+        <text class="input-label">标题 *</text>
+        <input 
+          class="input-field" 
+          name="title"
+          placeholder="请输入标题"
+          value="{{formData.title}}"
+          bindinput="onInputChange"
+          data-field="title"
+          maxlength="50"
+        />
+      </view>
+
+      <!-- 图片上传 -->
+      <view class="input-group">
+        <text class="input-label">图片 * (最多9张)</text>
+        <view class="image-upload-container">
+          <view class="image-item" wx:for="{{formData.images}}" wx:key="index">
+            <image class="uploaded-image" src="{{item}}" mode="aspectFill"></image>
+            <view class="image-delete" bindtap="onDeleteImage" data-index="{{index}}">
+              <icon type="cancel" size="16" color="white"></icon>
+            </view>
+          </view>
+          <view class="image-upload-btn" bindtap="onChooseImage" wx:if="{{formData.images.length < 9}}">
+            <icon type="plus" size="24" color="#999"></icon>
+            <text class="upload-text">添加图片</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 品种 -->
+      <view class="input-group">
+        <text class="input-label">品种 *</text>
+        <picker 
+          mode="selector" 
+          range="{{breedOptions}}" 
+          value="{{breedIndex}}"
+          bindchange="onBreedChange">
+          <view class="picker-field">
+            <text class="{{formData.breed ? '' : 'placeholder'}}">
+              {{formData.breed || '请选择品种'}}
+            </text>
+            <icon type="arrow" size="16" color="#999"></icon>
+          </view>
+        </picker>
+      </view>
+
+      <!-- 毛色 -->
+      <view class="input-group">
+        <text class="input-label">毛色 *</text>
+        <picker 
+          mode="selector" 
+          range="{{colorOptions}}" 
+          value="{{colorIndex}}"
+          bindchange="onColorChange">
+          <view class="picker-field">
+            <text class="{{formData.color ? '' : 'placeholder'}}">
+              {{formData.color || '请选择毛色'}}
+            </text>
+            <icon type="arrow" size="16" color="#999"></icon>
+          </view>
+        </picker>
+      </view>
+
+      <!-- 地点 -->
+      <view class="input-group">
+        <text class="input-label">地点 *</text>
+        <location-picker 
+          location="{{formData.location}}"
+          placeholder="点击选择地点"
+          showManualInput="{{true}}"
+          bind:locationchange="onLocationChange">
+        </location-picker>
+      </view>
+
+      <!-- 时间字段 (寻宠/发现) -->
+      <view class="input-group" wx:if="{{currentType === 'lost' || currentType === 'found'}}">
+        <text class="input-label">{{currentType === 'lost' ? '丢失' : '发现'}}时间</text>
+        <picker 
+          mode="date" 
+          value="{{formData.lostOrFoundDate}}"
+          bindchange="onDateChange">
+          <view class="picker-field">
+            <text class="{{formData.lostOrFoundDate ? '' : 'placeholder'}}">
+              {{formData.lostOrFoundDate || '请选择日期'}}
+            </text>
+            <icon type="arrow" size="16" color="#999"></icon>
+          </view>
+        </picker>
+      </view>
+
+      <!-- 服务类型 (寄养/配种) -->
+      <view class="input-group" wx:if="{{currentType === 'foster' || currentType === 'breed'}}">
+        <text class="input-label">服务类型</text>
+        <radio-group bindchange="onServiceTypeChange">
+          <label class="radio-item">
+            <radio value="provide" checked="{{formData.serviceType === 'provide'}}"/>
+            <text>提供服务</text>
+          </label>
+          <label class="radio-item">
+            <radio value="seek" checked="{{formData.serviceType === 'seek'}}"/>
+            <text>寻求服务</text>
+          </label>
+        </radio-group>
+      </view>
+
+      <!-- 价格/报酬 (寄养/配种) -->
+      <view class="input-group" wx:if="{{currentType === 'foster' || currentType === 'breed'}}">
+        <text class="input-label">价格/报酬</text>
+        <input 
+          class="input-field" 
+          name="price"
+          placeholder="请输入价格或报酬"
+          value="{{formData.price}}"
+          bindinput="onInputChange"
+          data-field="price"
+          type="digit"
+        />
+      </view>
+
+      <!-- 领养状态 (收养) -->
+      <view class="input-group" wx:if="{{currentType === 'adopt'}}">
+        <text class="input-label">状态</text>
+        <radio-group bindchange="onAdoptStatusChange">
+          <label class="radio-item">
+            <radio value="pending" checked="{{formData.adoptStatus === 'pending'}}"/>
+            <text>待领养</text>
+          </label>
+          <label class="radio-item">
+            <radio value="adopted" checked="{{formData.adoptStatus === 'adopted'}}"/>
+            <text>已领养</text>
+          </label>
+        </radio-group>
+      </view>
+
+      <!-- 详细描述 -->
+      <view class="input-group">
+        <text class="input-label">详细描述 *</text>
+        <textarea 
+          class="input-field textarea-field" 
+          name="description"
+          placeholder="请详细描述宠物特征、情况等信息"
+          value="{{formData.description}}"
+          bindinput="onInputChange"
+          data-field="description"
+          maxlength="500"
+          show-confirm-bar="false"
+        ></textarea>
+        <text class="char-count">{{formData.description.length}}/500</text>
+      </view>
+
+      <!-- 联系方式 -->
+      <view class="input-group">
+        <text class="input-label">联系方式 *</text>
+        <input 
+          class="input-field" 
+          name="contact"
+          placeholder="请输入手机号或微信号"
+          value="{{formData.contact}}"
+          bindinput="onInputChange"
+          data-field="contact"
+          maxlength="20"
+        />
+      </view>
+
+      <!-- 提交按钮 -->
+      <view class="submit-container">
+        <button 
+          class="btn btn-primary btn-large submit-btn" 
+          formType="submit"
+          loading="{{submitting}}"
+          disabled="{{submitting}}">
+          {{submitting ? '保存中...' : '保存修改'}}
+        </button>
+      </view>
+    </view>
+  </form>
+</view>

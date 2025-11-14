@@ -1,0 +1,398 @@
+/* pages/post/detail.wxss */
+
+.page-container {
+  padding-bottom: 120rpx;
+}
+
+/* 图片轮播 */
+.image-container {
+  position: relative;
+  height: 500rpx;
+}
+
+.image-swiper {
+  width: 100%;
+  height: 100%;
+}
+
+.detail-image {
+  width: 100%;
+  height: 100%;
+}
+
+.image-indicator {
+  position: absolute;
+  bottom: 20rpx;
+  right: 20rpx;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: var(--white);
+  padding: 8rpx 16rpx;
+  border-radius: 20rpx;
+  font-size: 22rpx;
+}
+
+/* 帖子信息 */
+.post-info {
+  background-color: var(--white);
+  margin-top: 20rpx;
+  padding: 32rpx;
+}
+
+/* 帖子头部 */
+.post-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 32rpx;
+}
+
+.post-title {
+  flex: 1;
+  font-size: 36rpx;
+  font-weight: 600;
+  color: var(--text-color);
+  line-height: 1.4;
+  margin-right: 20rpx;
+}
+
+.post-type-tag {
+  padding: 12rpx 20rpx;
+  border-radius: 24rpx;
+  font-size: 24rpx;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.post-type-tag.lost {
+  background-color: rgba(245, 34, 45, 0.1);
+  color: #f5222d;
+}
+
+.post-type-tag.found {
+  background-color: rgba(82, 196, 26, 0.1);
+  color: #52c41a;
+}
+
+.post-type-tag.foster,
+.post-type-tag.breed {
+  background-color: rgba(255, 140, 0, 0.1);
+  color: var(--primary-color);
+}
+
+.post-type-tag.adopt {
+  background-color: rgba(77, 182, 255, 0.1);
+  color: var(--secondary-color);
+}
+
+/* 信息区域 */
+.info-section {
+  margin-bottom: 32rpx;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  padding: 16rpx 0;
+  border-bottom: 1rpx solid var(--border-color);
+}
+
+.info-item:last-child {
+  border-bottom: none;
+}
+
+.info-label {
+  width: 160rpx;
+  font-size: 28rpx;
+  color: var(--text-light);
+  flex-shrink: 0;
+}
+
+.info-value {
+  flex: 1;
+  font-size: 28rpx;
+  color: var(--text-color);
+  font-weight: 500;
+}
+
+/* 描述区域 */
+.description-section {
+  margin-bottom: 32rpx;
+}
+
+.section-title {
+  display: block;
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--text-color);
+  margin-bottom: 16rpx;
+}
+
+.description-text {
+  font-size: 28rpx;
+  color: var(--text-color);
+  line-height: 1.6;
+}
+
+/* 发布者信息 */
+.publisher-section {
+  padding-top: 32rpx;
+  border-top: 1rpx solid var(--border-color);
+  margin-bottom: 32rpx;
+}
+
+.publisher-info {
+  display: flex;
+  align-items: center;
+}
+
+.publisher-avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  margin-right: 20rpx;
+}
+
+.publisher-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.publisher-name {
+  font-size: 30rpx;
+  font-weight: 500;
+  color: var(--text-color);
+  margin-bottom: 8rpx;
+}
+
+.publish-time {
+  font-size: 24rpx;
+  color: var(--text-lighter);
+}
+
+/* 编辑时间脚注 */
+.edit-footer {
+  margin-top: 24rpx;
+  padding-top: 16rpx;
+  border-top: 1rpx solid var(--border-color);
+}
+
+.edit-info {
+  font-size: 22rpx;
+  color: var(--text-lighter);
+  font-style: italic;
+}
+
+/* 相似信息 */
+.similar-section {
+  border-top: 1rpx solid var(--border-color);
+  padding-top: 32rpx;
+}
+
+.similar-list {
+  margin-top: 20rpx;
+}
+
+.similar-item {
+  display: flex;
+  align-items: center;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid var(--border-color);
+}
+
+.similar-item:last-child {
+  border-bottom: none;
+}
+
+.similar-image {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 12rpx;
+  margin-right: 20rpx;
+}
+
+.similar-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.similar-title {
+  font-size: 28rpx;
+  color: var(--text-color);
+  font-weight: 500;
+  margin-bottom: 8rpx;
+}
+
+.similar-meta {
+  font-size: 24rpx;
+  color: var(--text-light);
+  margin-bottom: 8rpx;
+}
+
+.similar-score {
+  font-size: 22rpx;
+  color: var(--primary-color);
+  font-weight: 500;
+}
+
+/* 操作栏 */
+.action-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--white);
+  padding: 20rpx 32rpx;
+  padding-bottom: calc(20rpx + env(safe-area-inset-bottom));
+  border-top: 1rpx solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.action-left {
+  display: flex;
+  gap: 16rpx;
+}
+
+.action-center {
+  display: flex;
+  gap: 16rpx;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.action-right {
+  flex: 1;
+  margin-left: 20rpx;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+  height: 72rpx;
+  border-radius: 36rpx;
+  font-size: 26rpx;
+  font-weight: 500;
+  border: none;
+  padding: 0 24rpx;
+}
+
+.action-btn.primary {
+  background-color: var(--primary-color);
+  color: var(--white);
+  flex: 1;
+}
+
+.action-btn.secondary {
+  background-color: var(--background-color);
+  color: var(--text-light);
+}
+
+.action-btn.edit {
+  background-color: rgba(74, 144, 226, 0.1);
+  color: var(--primary-color);
+  border: 1rpx solid var(--primary-color);
+}
+
+.action-btn.delete {
+  background-color: rgba(244, 67, 54, 0.1);
+  color: #f44336;
+  border: 1rpx solid #f44336;
+}
+
+.action-btn:active {
+  opacity: 0.8;
+}
+
+/* 联系方式弹窗 */
+.contact-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.contact-content {
+  background-color: var(--white);
+  border-radius: 20rpx;
+  margin: 40rpx;
+  max-width: 600rpx;
+  width: 100%;
+}
+
+.contact-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 32rpx 32rpx 0;
+}
+
+.contact-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.contact-close {
+  color: var(--text-lighter);
+}
+
+.contact-info {
+  padding: 32rpx;
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+}
+
+.contact-text {
+  flex: 1;
+  font-size: 32rpx;
+  color: var(--text-color);
+  font-weight: 500;
+  background-color: var(--background-color);
+  padding: 20rpx;
+  border-radius: 12rpx;
+}
+
+.copy-btn {
+  background-color: var(--primary-color);
+  color: var(--white);
+  border: none;
+  border-radius: 8rpx;
+  padding: 16rpx 24rpx;
+  font-size: 26rpx;
+}
+
+.contact-tips {
+  padding: 0 32rpx 32rpx;
+  text-align: center;
+}
+
+.contact-tips text {
+  font-size: 24rpx;
+  color: var(--text-lighter);
+}
+
+/* 加载状态 */
+.loading-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.loading {
+  color: var(--text-lighter);
+  font-size: 28rpx;
+}

@@ -1,0 +1,128 @@
+/**preview.wxss**/
+.container {
+  padding: 30rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.landscape-container {
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.preview-box {
+  width: 100%;
+  height: 400rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8rpx;
+  overflow: hidden;
+  margin-bottom: 40rpx;
+}
+
+.landscape-preview {
+  width: 90vw;
+  height: 60vh;
+  transform: rotate(90deg);
+  margin: 20rpx 0;
+}
+
+.danmu-text {
+  font-weight: bold;
+  text-align: center;
+  word-break: break-all;
+  padding: 20rpx;
+  width: 100%;
+}
+
+.action-buttons {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 30rpx;
+  margin-bottom: 30rpx;
+}
+
+.action-buttons .btn {
+  width: 45%;
+  margin: 0;
+}
+
+.tips {
+  font-size: 24rpx;
+  color: #999;
+  text-align: center;
+  margin-bottom: 20rpx;
+}
+
+.orientation-switch {
+  margin-top: 20rpx;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.btn-small {
+  font-size: 28rpx;
+  padding: 10rpx 20rpx;
+  line-height: 1.5;
+  width: auto !important;
+  min-width: 200rpx;
+}
+
+@keyframes scrollText {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes blinkText {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes gradientText {
+  0% {
+    filter: hue-rotate(0deg);
+  }
+  100% {
+    filter: hue-rotate(360deg);
+  }
+}
+
+/* 滚动文字样式 */
+.scroll-text {
+  white-space: nowrap;
+  display: inline-block;
+  width: auto !important;
+  position: relative;
+  animation-name: scrollText;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+/* 闪烁文字样式 */
+.blink-text {
+  animation-name: blinkText;
+  animation-timing-function: ease;
+  animation-iteration-count: infinite;
+}
+
+/* 渐变文字样式 */
+.gradient-text {
+  animation-name: gradientText;
+  animation-timing-function: ease;
+  animation-iteration-count: infinite;
+}

@@ -1,0 +1,130 @@
+<!--pages/profile/index.wxml-->
+<view class="page-container">
+  <!-- 用户信息区域 -->
+  <view class="user-section">
+    <view class="user-info" wx:if="{{userInfo}}">
+      <image class="user-avatar" src="{{userInfo.avatarUrl}}" mode="aspectFill"></image>
+      <view class="user-details">
+        <text class="user-name">{{userInfo.nickName}}</text>
+        <text class="user-desc">宠物爱好者</text>
+      </view>
+    </view>
+    
+    <view class="login-prompt" wx:else>
+      <view class="login-avatar">
+        <icon type="contact" size="40" color="#ccc"></icon>
+      </view>
+      <view class="login-info">
+        <text class="login-text">点击登录</text>
+        <text class="login-desc">登录后可发布和管理信息</text>
+      </view>
+      <button class="login-btn" bindtap="onLogin">登录</button>
+    </view>
+  </view>
+
+  <!-- 统计信息 -->
+  <view class="stats-section" wx:if="{{userInfo}}">
+    <view class="stats-item">
+      <text class="stats-number">{{stats.postCount || 0}}</text>
+      <text class="stats-label">发布</text>
+    </view>
+    <view class="stats-item">
+      <text class="stats-number">{{stats.notificationCount || 0}}</text>
+      <text class="stats-label">提醒</text>
+    </view>
+    <view class="stats-item">
+      <text class="stats-number">{{stats.helpCount || 0}}</text>
+      <text class="stats-label">帮助</text>
+    </view>
+  </view>
+
+  <!-- 功能菜单 -->
+  <view class="menu-section">
+    <!-- 我的发布 -->
+    <view class="menu-item" bindtap="onMyPostsTap" wx:if="{{userInfo}}">
+      <view class="menu-icon">
+        <icon type="edit" size="20" color="#FF8C00"></icon>
+      </view>
+      <text class="menu-text">我的发布</text>
+      <view class="menu-badge" wx:if="{{stats.postCount > 0}}">{{stats.postCount}}</view>
+      <icon class="menu-arrow" type="arrow" size="16" color="#ccc"></icon>
+    </view>
+
+    <!-- 我的提醒 -->
+    <view class="menu-item" bindtap="onNotificationsTap" wx:if="{{userInfo}}">
+      <view class="menu-icon">
+        <icon type="info" size="20" color="#4DB6FF"></icon>
+      </view>
+      <text class="menu-text">我的提醒</text>
+      <view class="menu-badge" wx:if="{{stats.unreadCount > 0}}">{{stats.unreadCount}}</view>
+      <icon class="menu-arrow" type="arrow" size="16" color="#ccc"></icon>
+    </view>
+
+    <!-- 收藏夹 -->
+    <view class="menu-item" bindtap="onFavoritesTap" wx:if="{{userInfo}}">
+      <view class="menu-icon">
+        <icon type="success" size="20" color="#52c41a"></icon>
+      </view>
+      <text class="menu-text">收藏夹</text>
+      <icon class="menu-arrow" type="arrow" size="16" color="#ccc"></icon>
+    </view>
+
+    <!-- 收养信息 -->
+    <view class="menu-item" bindtap="onAdoptionTap">
+      <view class="menu-icon">
+        <text class="menu-emoji">🤗</text>
+      </view>
+      <text class="menu-text">收养信息</text>
+      <icon class="menu-arrow" type="arrow" size="16" color="#ccc"></icon>
+    </view>
+
+    <!-- 本地服务 -->
+    <view class="menu-item" bindtap="onServicesTap">
+      <view class="menu-icon">
+        <text class="menu-emoji">🏥</text>
+      </view>
+      <text class="menu-text">本地服务</text>
+      <icon class="menu-arrow" type="arrow" size="16" color="#ccc"></icon>
+    </view>
+  </view>
+
+  <!-- 设置菜单 -->
+  <view class="menu-section">
+    <!-- 设置 -->
+    <view class="menu-item" bindtap="onSettingsTap">
+      <view class="menu-icon">
+        <icon type="setting" size="20" color="#666"></icon>
+      </view>
+      <text class="menu-text">设置</text>
+      <icon class="menu-arrow" type="arrow" size="16" color="#ccc"></icon>
+    </view>
+
+    <!-- 帮助与反馈 -->
+    <view class="menu-item" bindtap="onHelpTap">
+      <view class="menu-icon">
+        <icon type="info_circle" size="20" color="#666"></icon>
+      </view>
+      <text class="menu-text">帮助与反馈</text>
+      <icon class="menu-arrow" type="arrow" size="16" color="#ccc"></icon>
+    </view>
+
+    <!-- 关于我们 -->
+    <view class="menu-item" bindtap="onAboutTap">
+      <view class="menu-icon">
+        <text class="menu-emoji">🐾</text>
+      </view>
+      <text class="menu-text">关于我们</text>
+      <icon class="menu-arrow" type="arrow" size="16" color="#ccc"></icon>
+    </view>
+  </view>
+
+  <!-- 退出登录 -->
+  <view class="logout-section" wx:if="{{userInfo}}">
+    <button class="logout-btn" bindtap="onLogout">退出登录</button>
+  </view>
+
+  <!-- 版本信息 -->
+  <view class="version-info">
+    <text class="version-text">宠物邻里 v1.0.0</text>
+  </view>
+</view>

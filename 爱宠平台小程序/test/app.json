@@ -1,0 +1,8 @@
+{
+  "pages": [
+    "test/test-user-profile"
+  ],
+  "window": {
+    "navigationBarTitleText": "用户信息存储测试"
+  }
+}

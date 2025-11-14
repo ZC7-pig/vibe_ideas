@@ -1,0 +1,70 @@
+<!--pages/services/index.wxml-->
+<view class="page-container">
+  <!-- 页面头部 -->
+  <view class="header-section">
+    <text class="header-title">本地宠物服务</text>
+    <text class="header-desc">为您的爱宠提供便捷服务</text>
+  </view>
+
+  <!-- 服务分类 -->
+  <view class="services-container">
+    <view class="service-item" 
+          wx:for="{{services}}" 
+          wx:key="id"
+          bindtap="onServiceTap"
+          data-id="{{item.id}}">
+      <view class="service-icon">
+        <text class="icon-text">{{item.icon}}</text>
+      </view>
+      <view class="service-info">
+        <text class="service-name">{{item.name}}</text>
+        <text class="service-desc">{{item.description}}</text>
+      </view>
+      <view class="service-arrow">
+        <icon type="arrow" size="16" color="#ccc"></icon>
+      </view>
+    </view>
+  </view>
+
+  <!-- 推荐服务 -->
+  <view class="recommend-section">
+    <text class="section-title">推荐服务</text>
+    <view class="recommend-list">
+      <view class="recommend-item" wx:for="{{recommendServices}}" wx:key="id">
+        <image class="recommend-image" src="{{item.image}}" mode="aspectFill"></image>
+        <view class="recommend-info">
+          <text class="recommend-name">{{item.name}}</text>
+          <text class="recommend-address">{{item.address}}</text>
+          <view class="recommend-meta">
+            <text class="recommend-distance">{{item.distance}}</text>
+            <text class="recommend-rating">⭐ {{item.rating}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 服务提示 -->
+  <view class="service-tips">
+    <text class="tips-text">更多服务正在开发中，敬请期待...</text>
+    <button class="tips-btn" bindtap="onSuggestTap">我要提建议</button>
+  </view>
+
+  <!-- 服务即将上线弹窗 -->
+  <view class="coming-modal" wx:if="{{showComingModal}}" bindtap="onCloseComingModal">
+    <view class="coming-content" catchtap="stopPropagation">
+      <view class="coming-header">
+        <text class="coming-title">{{currentService.name}}</text>
+        <icon class="coming-close" type="cancel" size="20" bindtap="onCloseComingModal"></icon>
+      </view>
+      <view class="coming-body">
+        <view class="coming-icon">{{currentService.icon}}</view>
+        <text class="coming-message">该功能即将上线，敬请期待</text>
+        <text class="coming-desc">我们正在努力开发{{currentService.name}}功能，将为您提供{{currentService.description}}。</text>
+      </view>
+      <view class="coming-actions">
+        <button class="coming-btn" bindtap="onCloseComingModal">我知道了</button>
+      </view>
+    </view>
+  </view>
+</view>

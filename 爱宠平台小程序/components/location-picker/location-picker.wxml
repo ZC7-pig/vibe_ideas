@@ -1,0 +1,123 @@
+<!-- components/location-picker/location-picker.wxml -->
+<view class="location-picker">
+  <!-- 地点选择触发器 -->
+  <view class="location-trigger" bindtap="openLocationPicker">
+    <text class="{{location ? 'location-text' : 'placeholder-text'}}">
+      {{location ? location.name : placeholder}}
+    </text>
+    <icon type="location" size="16" color="#999"></icon>
+  </view>
+
+  <!-- 地点选择弹窗 -->
+  <view class="location-modal" wx:if="{{showModal}}">
+    <view class="modal-mask" bindtap="closeLocationPicker"></view>
+    <view class="modal-content">
+      <!-- 标题栏 -->
+      <view class="modal-header">
+        <text class="modal-title">选择地点</text>
+        <view class="close-btn" bindtap="closeLocationPicker">
+          <icon type="clear" size="20" color="#666"></icon>
+        </view>
+      </view>
+
+      <!-- 搜索框 -->
+      <view class="search-section">
+        <view class="search-box">
+          <icon type="search" size="16" color="#999"></icon>
+          <input 
+            class="search-input" 
+            placeholder="搜索地点" 
+            value="{{searchKeyword}}"
+            bindinput="onSearchInput"
+            confirm-type="search"
+          />
+        </view>
+      </view>
+
+      <!-- 快捷选项 -->
+      <view class="quick-options">
+        <!-- 当前位置 -->
+        <view class="option-item" bindtap="useCurrentLocation">
+          <icon type="location" size="20" color="#FF8C00"></icon>
+          <view class="option-content">
+            <text class="option-title">使用当前位置</text>
+            <text class="option-desc" wx:if="{{currentLocation}}">{{currentLocation.name}}</text>
+            <text class="option-desc" wx:else>获取当前位置信息</text>
+          </view>
+        </view>
+
+        <!-- 地图选择 -->
+        <view class="option-item" bindtap="openWechatLocationPicker">
+          <icon type="location" size="20" color="#4DB6FF"></icon>
+          <view class="option-content">
+            <text class="option-title">在地图上选择</text>
+            <text class="option-desc">打开地图选择精确位置</text>
+          </view>
+        </view>
+
+        <!-- 手动输入 -->
+        <view class="option-item" wx:if="{{showManualInput}}" bindtap="openManualInputDialog">
+          <icon type="edit" size="20" color="#52C41A"></icon>
+          <view class="option-content">
+            <text class="option-title">手动输入地址</text>
+            <text class="option-desc">直接输入详细地址</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 搜索结果 -->
+      <view class="search-results" wx:if="{{searchResults.length > 0}}">
+        <view class="results-title">搜索结果</view>
+        <scroll-view class="results-list" scroll-y="true">
+          <view 
+            class="result-item" 
+            wx:for="{{searchResults}}" 
+            wx:key="index"
+            data-index="{{index}}"
+            bindtap="selectSearchResult"
+          >
+            <icon type="location" size="16" color="#999"></icon>
+            <view class="result-content">
+              <text class="result-name">{{item.name}}</text>
+              <text class="result-address">{{item.address}}</text>
+            </view>
+          </view>
+        </scroll-view>
+      </view>
+
+      <!-- 加载状态 -->
+      <view class="loading-state" wx:if="{{isSearching}}">
+        <text>搜索中...</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 手动输入地址弹窗 -->
+  <view class="manual-input-modal" wx:if="{{showManualInputDialog}}">
+    <view class="modal-mask" bindtap="closeManualInputDialog"></view>
+    <view class="manual-input-content">
+      <view class="modal-header">
+        <text class="modal-title">输入地址</text>
+        <view class="close-btn" bindtap="closeManualInputDialog">
+          <icon type="clear" size="20" color="#666"></icon>
+        </view>
+      </view>
+      
+      <view class="input-section">
+        <textarea 
+          class="address-input" 
+          placeholder="请输入详细地址，如：北京市朝阳区三里屯街道"
+          value="{{manualAddress}}"
+          bindinput="onManualAddressInput"
+          maxlength="100"
+          auto-height
+        ></textarea>
+      </view>
+      
+      <view class="button-section">
+        <button class="cancel-btn" bindtap="closeManualInputDialog">取消</button>
+        <button class="confirm-btn" bindtap="confirmManualAddress">确定</button>
+      </view>
+    </view>
+  </view>
+</view>

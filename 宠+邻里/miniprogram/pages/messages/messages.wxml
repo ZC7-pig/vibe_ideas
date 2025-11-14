@@ -1,0 +1,158 @@
+<!--消息页面-->
+<view class="messages-container">
+  <!-- 未登录状态 -->
+  <view wx:if="{{!isLoggedIn}}" class="login-prompt">
+    <view class="prompt-icon">📱</view>
+    <view class="prompt-text">请先登录查看消息</view>
+    <button class="login-btn" bindtap="goToLogin">立即登录</button>
+  </view>
+
+  <!-- 已登录状态 -->
+  <view wx:else>
+    <!-- 消息类型切换 -->
+    <view class="message-tabs">
+      <view 
+        class="tab-item {{activeTab === 'system' ? 'active' : ''}}"
+        bindtap="switchTab"
+        data-tab="system"
+      >
+        系统消息
+        <view wx:if="{{systemUnreadCount > 0}}" class="unread-badge">{{systemUnreadCount}}</view>
+      </view>
+      <view 
+        class="tab-item {{activeTab === 'match' ? 'active' : ''}}"
+        bindtap="switchTab"
+        data-tab="match"
+      >
+        匹配通知
+        <view wx:if="{{matchUnreadCount > 0}}" class="unread-badge">{{matchUnreadCount}}</view>
+      </view>
+      <view 
+        class="tab-item {{activeTab === 'comment' ? 'active' : ''}}"
+        bindtap="switchTab"
+        data-tab="comment"
+      >
+        评论回复
+        <view wx:if="{{commentUnreadCount > 0}}" class="unread-badge">{{commentUnreadCount}}</view>
+      </view>
+    </view>
+
+    <!-- 消息列表 -->
+    <scroll-view 
+      class="messages-list" 
+      scroll-y="{{true}}"
+      bindscrolltolower="loadMoreMessages"
+      refresher-enabled="{{true}}"
+      refresher-triggered="{{refreshing}}"
+      bindrefresherrefresh="onRefresh"
+    >
+      <!-- 加载中 -->
+      <view wx:if="{{loading && messages.length === 0}}" class="loading-container">
+        <view class="loading-spinner"></view>
+        <view class="loading-text">加载中...</view>
+      </view>
+
+      <!-- 消息列表 -->
+      <view wx:elif="{{messages.length > 0}}" class="message-items">
+        <view 
+          wx:for="{{messages}}" 
+          wx:key="id" 
+          class="message-item {{!item.isRead ? 'unread' : ''}}"
+          bindtap="viewMessage"
+          data-message="{{item}}"
+        >
+          <!-- 消息图标 -->
+          <view class="message-icon">
+            <view wx:if="{{item.type === 'system'}}" class="icon system-icon">🔔</view>
+            <view wx:elif="{{item.type === 'match'}}" class="icon match-icon">🎯</view>
+            <view wx:elif="{{item.type === 'comment'}}" class="icon comment-icon">💬</view>
+            <view wx:elif="{{item.type === 'like'}}" class="icon like-icon">❤️</view>
+          </view>
+
+          <!-- 消息内容 -->
+          <view class="message-content">
+            <view class="message-title">{{item.title}}</view>
+            <view class="message-summary">{{item.content}}</view>
+            <view class="message-time">{{item.createTimeFormatted}}</view>
+          </view>
+
+          <!-- 未读标识 -->
+          <view wx:if="{{!item.isRead}}" class="unread-dot"></view>
+        </view>
+      </view>
+
+      <!-- 空状态 -->
+      <view wx:else class="empty-container">
+        <view class="empty-icon">📭</view>
+        <view class="empty-text">暂无{{tabNames[activeTab]}}消息</view>
+      </view>
+
+      <!-- 加载更多 -->
+      <view wx:if="{{hasMore && messages.length > 0}}" class="load-more">
+        <view wx:if="{{loadingMore}}" class="loading-more">
+          <view class="loading-spinner small"></view>
+          <text>加载中...</text>
+        </view>
+        <view wx:else class="load-more-btn" bindtap="loadMoreMessages">
+          点击加载更多
+        </view>
+      </view>
+
+      <!-- 没有更多 -->
+      <view wx:if="{{!hasMore && messages.length > 0}}" class="no-more">
+        没有更多消息了
+      </view>
+    </scroll-view>
+
+    <!-- 全部标记为已读 -->
+    <view wx:if="{{messages.length > 0 && hasUnread}}" class="mark-all-read">
+      <button class="mark-read-btn" bindtap="markAllRead">全部标记为已读</button>
+    </view>
+  </view>
+</view>
+
+<!-- 消息详情弹窗 -->
+<view wx:if="{{showMessageDetail}}" class="message-modal" bindtap="closeMessageDetail">
+  <view class="modal-content" catchtap="stopPropagation">
+    <view class="modal-header">
+      <view class="modal-title">{{selectedMessage.title}}</view>
+      <view class="modal-close" bindtap="closeMessageDetail">×</view>
+    </view>
+    <view class="modal-body">
+      <view class="message-detail-content">{{selectedMessage.content}}</view>
+      <view wx:if="{{selectedMessage.data}}" class="message-data">
+        <!-- 匹配消息的额外信息 -->
+        <view wx:if="{{selectedMessage.type === 'match' && selectedMessage.data.matchedPost}}">
+          <view class="matched-post">
+            <view class="matched-title">匹配的帖子：</view>
+            <view class="matched-info">
+              <view class="matched-post-title">{{selectedMessage.data.matchedPost.title}}</view>
+              <view class="matched-post-type">类型：{{selectedMessage.data.matchedPost.typeText}}</view>
+            </view>
+          </view>
+        </view>
+        
+        <!-- 评论消息的额外信息 -->
+        <view wx:if="{{selectedMessage.type === 'comment' && selectedMessage.data.post}}">
+          <view class="comment-post">
+            <view class="comment-title">相关帖子：</view>
+            <view class="comment-info">
+              <view class="comment-post-title">{{selectedMessage.data.post.title}}</view>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="message-detail-time">{{selectedMessage.createTimeFormatted}}</view>
+    </view>
+    <view class="modal-footer">
+      <button 
+        wx:if="{{selectedMessage.data && selectedMessage.data.postId}}" 
+        class="view-post-btn"
+        bindtap="viewRelatedPost"
+      >
+        查看相关帖子
+      </button>
+      <button class="close-btn" bindtap="closeMessageDetail">关闭</button>
+    </view>
+  </view>
+</view>

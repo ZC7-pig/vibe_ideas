@@ -1,0 +1,42 @@
+<!--preview.wxml-->
+<view class="container {{isLandscape ? 'landscape-container' : ''}}">
+  <view class="preview-box {{isLandscape ? 'landscape-preview' : ''}}" style="background-color: {{danmuData.bgColor}};">
+    <block wx:if="{{danmuData.effect === 'scroll'}}">
+      <view class="danmu-text scroll-text" 
+            style="color: {{danmuData.textColor}}; font-size: {{danmuData.fontSize}}rpx; animation-duration: {{11 - danmuData.effectSpeed}}s;">
+        {{danmuData.text}}
+      </view>
+    </block>
+    <block wx:elif="{{danmuData.effect === 'blink'}}">
+      <view class="danmu-text blink-text" 
+            style="color: {{danmuData.textColor}}; font-size: {{danmuData.fontSize}}rpx; animation-duration: {{11 - danmuData.effectSpeed}}s;">
+        {{danmuData.text}}
+      </view>
+    </block>
+    <block wx:elif="{{danmuData.effect === 'gradient'}}">
+      <view class="danmu-text gradient-text" 
+            style="color: {{danmuData.textColor}}; font-size: {{danmuData.fontSize}}rpx; animation-duration: {{11 - danmuData.effectSpeed}}s;">
+        {{danmuData.text}}
+      </view>
+    </block>
+    <block wx:else>
+      <view class="danmu-text" 
+            style="color: {{danmuData.textColor}}; font-size: {{danmuData.fontSize}}rpx;">
+        {{danmuData.text}}
+      </view>
+    </block>
+  </view>
+  
+  <view class="orientation-switch">
+    <button class="btn btn-small" bindtap="toggleOrientation">切换为{{isLandscape ? '竖屏' : '横屏'}}</button>
+  </view>
+  
+  <view class="action-buttons">
+    <button class="btn btn-default" bindtap="goBack">返回编辑</button>
+    <button class="btn btn-primary" bindtap="showFullscreen">全屏显示</button>
+  </view>
+  
+  <view class="tips">
+    <text>提示：全屏显示时请横屏持握手机，点击屏幕可返回</text>
+  </view>
+</view>

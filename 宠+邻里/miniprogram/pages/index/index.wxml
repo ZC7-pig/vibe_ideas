@@ -1,0 +1,117 @@
+<!--pages/index/index.wxml-->
+<view class="container">
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <view class="search-input" bindtap="goToSearch">
+      <text class="search-placeholder">搜索宠物、品种、地点...</text>
+      <image class="search-icon" src="/images/search.png"></image>
+    </view>
+  </view>
+
+  <!-- 筛选标签 -->
+  <view class="filter-tabs">
+    <view class="tab-item {{activeTab === 'all' ? 'active' : ''}}" bindtap="switchTab" data-tab="all">
+      全部
+    </view>
+    <view class="tab-item {{activeTab === 'lost' ? 'active' : ''}}" bindtap="switchTab" data-tab="lost">
+      寻宠
+    </view>
+    <view class="tab-item {{activeTab === 'found' ? 'active' : ''}}" bindtap="switchTab" data-tab="found">
+      发现
+    </view>
+    <view class="tab-item {{activeTab === 'adoption' ? 'active' : ''}}" bindtap="switchTab" data-tab="adoption">
+      收养
+    </view>
+  </view>
+
+  <!-- 帖子列表 -->
+  <scroll-view class="posts-list" scroll-y="true" bindscrolltolower="loadMore" enable-back-to-top="true">
+    <view wx:if="{{posts.length === 0 && !loading}}" class="empty">
+      <image class="empty-icon" src="/images/empty.png"></image>
+      <text class="empty-text">暂无相关信息</text>
+    </view>
+
+    <view wx:for="{{posts}}" wx:key="_id" class="post-card" bindtap="goToDetail" data-id="{{item._id}}">
+      <!-- 帖子头部 -->
+      <view class="post-header">
+        <view class="author-info">
+          <image class="avatar" src="{{item.author.avatarUrl || '/images/default-avatar.png'}}"></image>
+          <view class="author-details">
+            <text class="author-name">{{item.author.nickName}}</text>
+            <text class="post-time">{{item.relativeTime}}</text>
+          </view>
+        </view>
+        <view class="post-type-tag tag-{{item.type}}">
+          {{item.typeText}}
+        </view>
+      </view>
+
+      <!-- 帖子内容 -->
+      <view class="post-content">
+        <text class="post-title">{{item.title}}</text>
+        <text class="post-desc" wx:if="{{item.content}}">{{item.content}}</text>
+        
+        <!-- 宠物信息标签 -->
+        <view class="pet-tags" wx:if="{{item.type !== 'normal'}}">
+          <view class="tag tag-info" wx:if="{{item.breed}}">{{item.breed}}</view>
+          <view class="tag tag-info" wx:if="{{item.color}}">{{item.color}}</view>
+          <view class="tag tag-info" wx:if="{{item.sex && item.sex !== 'unknown'}}">{{item.sexText}}</view>
+          <view class="tag tag-info" wx:if="{{item.age}}">{{item.age}}</view>
+        </view>
+
+        <!-- 位置信息 -->
+        <view class="location-info" wx:if="{{item.location}}">
+          <image class="location-icon" src="/images/location.png"></image>
+          <text class="location-text">{{item.location.address}}</text>
+          <text class="distance-text" wx:if="{{item.distance}}">{{item.distance}}</text>
+        </view>
+      </view>
+
+      <!-- 帖子图片 -->
+      <view class="post-images" wx:if="{{item.images && item.images.length > 0}}">
+        <image 
+          wx:for="{{item.images}}" 
+          wx:for-item="image" 
+          wx:key="*this"
+          class="post-image {{item.images.length === 1 ? 'single' : ''}}"
+          src="{{image}}" 
+          mode="aspectFill"
+          bindtap="previewImage"
+          data-current="{{image}}"
+          data-urls="{{item.images}}"
+        ></image>
+      </view>
+
+      <!-- 帖子底部 -->
+      <view class="post-footer">
+        <view class="post-actions">
+          <view class="action-item" bindtap="contactAuthor" data-post="{{item}}">
+            <image class="action-icon" src="/images/contact.png"></image>
+            <text class="action-text">联系</text>
+          </view>
+          <view class="action-item" bindtap="toggleLike" data-id="{{item._id}}">
+            <image class="action-icon" src="/images/{{item.liked ? 'heart-filled' : 'heart'}}.png"></image>
+            <text class="action-text">{{item.likeCount || 0}}</text>
+          </view>
+        </view>
+        <view class="expire-info" wx:if="{{item.expireAt}}">
+          <text class="expire-text">{{item.expireText}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 加载更多 -->
+    <view class="loading" wx:if="{{loading}}">
+      <text>加载中...</text>
+    </view>
+
+    <view class="no-more" wx:if="{{noMore && posts.length > 0}}">
+      <text>没有更多了</text>
+    </view>
+  </scroll-view>
+
+  <!-- 发布按钮 -->
+  <view class="fab" bindtap="goToPublish">
+    <image class="fab-icon" src="/images/add.png"></image>
+  </view>
+</view>

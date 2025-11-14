@@ -1,0 +1,76 @@
+/**app.wxss**/
+page {
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica,
+    'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif;
+}
+
+.container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+.btn {
+  width: 80%;
+  height: 90rpx;
+  line-height: 90rpx;
+  margin: 20rpx 0;
+  border-radius: 45rpx;
+  font-size: 32rpx;
+  font-weight: bold;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-primary {
+  background-color: #07c160;
+  color: #fff;
+}
+
+.btn-default {
+  background-color: #f8f8f8;
+  color: #333;
+  border: 1px solid #ddd;
+}
+
+.color-block {
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 8rpx;
+  margin: 0 10rpx;
+  border: 1px solid #ddd;
+}
+
+.active-color {
+  border: 3px solid #07c160;
+}
+
+.fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.danmu-text {
+  font-weight: bold;
+  text-align: center;
+  word-break: break-all;
+  padding: 20rpx;
+}
+
+.landscape {
+  transform: rotate(90deg);
+  transform-origin: center center;
+}

@@ -1,0 +1,80 @@
+<!--edit.wxml-->
+<view class="container">
+  <view class="edit-section">
+    <view class="section-title">弹幕内容</view>
+    <textarea class="danmu-input" placeholder="请输入弹幕内容" maxlength="20" bindinput="onInput" value="{{danmuText}}"></textarea>
+    
+    <view class="common-phrases">
+      <view class="section-title">常用语</view>
+      <view class="phrases-list">
+        <view class="phrase-item" wx:for="{{commonPhrases}}" wx:key="index" bindtap="selectPhrase" data-phrase="{{item}}">{{item}}</view>
+      </view>
+    </view>
+  </view>
+  
+  <view class="style-section">
+    <view class="section-title">样式设置</view>
+    
+    <view class="style-item">
+      <view class="item-title">文字颜色</view>
+      <view class="color-list">
+        <view class="color-block {{textColor === item ? 'active-color' : ''}}" 
+              wx:for="{{colorOptions}}" 
+              wx:key="index" 
+              style="background-color: {{item}}" 
+              bindtap="selectTextColor" 
+              data-color="{{item}}"></view>
+      </view>
+    </view>
+    
+    <view class="style-item">
+      <view class="item-title">背景颜色</view>
+      <view class="color-list">
+        <view class="color-block {{bgColor === item ? 'active-color' : ''}}" 
+              wx:for="{{bgColorOptions}}" 
+              wx:key="index" 
+              style="background-color: {{item}}" 
+              bindtap="selectBgColor" 
+              data-color="{{item}}"></view>
+      </view>
+    </view>
+    
+    <view class="style-item">
+      <view class="item-title">字体大小</view>
+      <view class="font-size-control">
+        <view class="control-btn" bindtap="changeFontSize" data-type="decrease">-</view>
+        <view class="font-size-value">{{fontSize}}</view>
+        <view class="control-btn" bindtap="changeFontSize" data-type="increase">+</view>
+      </view>
+    </view>
+  </view>
+  
+  <view class="effect-section">
+    <view class="section-title">动效设置</view>
+    
+    <view class="style-item">
+      <view class="item-title">动效类型</view>
+      <picker bindchange="selectEffect" value="{{effectIndex}}" range="{{effectOptions}}" range-key="name">
+        <view class="picker">
+          当前选择：{{effectOptions[effectIndex].name}}
+        </view>
+      </picker>
+    </view>
+    
+    <view class="style-item" wx:if="{{effect !== 'none'}}">
+      <view class="item-title">动效速度</view>
+      <slider min="1" max="10" value="{{effectSpeed}}" show-value bindchange="changeEffectSpeed" />
+    </view>
+  </view>
+  
+  <view class="preview-section">
+    <view class="preview-box" style="background-color: {{bgColor}};">
+      <text class="preview-text" style="color: {{textColor}}; font-size: {{fontSize}}rpx;">{{danmuText || '预览效果'}}</text>
+    </view>
+  </view>
+  
+  <view class="action-section">
+    <button class="btn btn-default" bindtap="previewDanmu">预览</button>
+    <button class="btn btn-primary" bindtap="showDanmu">全屏显示</button>
+  </view>
+</view>

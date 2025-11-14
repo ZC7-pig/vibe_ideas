@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "流浪动物收养",
+  "enablePullDownRefresh": true,
+  "onReachBottomDistance": 50,
+  "enableShareAppMessage": true
+}

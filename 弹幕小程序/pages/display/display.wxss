@@ -1,0 +1,118 @@
+/**display.wxss**/
+.fullscreen-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #000;
+}
+
+.fullscreen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+}
+
+.portrait {
+  width: 100vw;
+  height: 100vh;
+}
+
+.landscape {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  transform: rotate(90deg);
+  transform-origin: center center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.danmu-text {
+  font-weight: bold;
+  text-align: center;
+  word-break: break-all;
+  padding: 20rpx;
+  width: 100%;
+  max-width: 100%;
+}
+
+.loading-text {
+  color: #ffffff;
+  font-size: 36rpx;
+  text-align: center;
+  animation: fadeInOut 1.5s infinite ease-in-out;
+}
+
+@keyframes fadeInOut {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+/* 滚动文字样式 */
+.scroll-text {
+  white-space: nowrap;
+  display: inline-block;
+  width: auto !important;
+  position: relative;
+  animation-name: scrollText;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  max-width: 100%;
+  overflow: hidden;
+  text-align: center;
+}
+
+.landscape .scroll-text {
+  width: 100vh !important;
+  max-width: 100vh;
+}
+
+/* 闪烁文字样式 */
+.blink-text {
+  animation-name: blinkText;
+  animation-timing-function: ease;
+  animation-iteration-count: infinite;
+}
+
+/* 渐变文字样式 */
+.gradient-text {
+  animation-name: gradientText;
+  animation-timing-function: ease;
+  animation-iteration-count: infinite;
+}
+
+@keyframes scrollText {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-200%);
+  }
+}
+
+@keyframes blinkText {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes gradientText {
+  0% {
+    filter: hue-rotate(0deg);
+  }
+  100% {
+    filter: hue-rotate(360deg);
+  }
+}

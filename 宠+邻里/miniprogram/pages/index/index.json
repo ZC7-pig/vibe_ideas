@@ -1,0 +1,6 @@
+{
+  "usingComponents": {},
+  "navigationBarTitleText": "宠物生活",
+  "enablePullDownRefresh": true,
+  "onReachBottomDistance": 50
+}

@@ -1,0 +1,35 @@
+<!--display.wxml-->
+<view class="fullscreen-container" bindtap="onTapBack">
+  <view class="fullscreen {{isLandscape ? 'landscape' : 'portrait'}}" style="background-color: {{danmuData.bgColor || '#000000'}};">
+    <!-- 加载中提示，当没有数据时显示 -->
+    <view wx:if="{{!danmuData}}" class="loading-text">
+      加载中...
+    </view>
+    
+    <!-- 有数据时显示弹幕内容 -->
+    <block wx:elif="{{danmuData.effect === 'scroll'}}">
+      <view class="danmu-text scroll-text" 
+            style="color: {{danmuData.textColor}}; font-size: {{danmuData.fontSize}}rpx; animation-duration: {{11 - danmuData.effectSpeed}}s;">
+        {{danmuData.text || '弹幕文本'}}
+      </view>
+    </block>
+    <block wx:elif="{{danmuData.effect === 'blink'}}">
+      <view class="danmu-text blink-text" 
+            style="color: {{danmuData.textColor}}; font-size: {{danmuData.fontSize}}rpx; animation-duration: {{11 - danmuData.effectSpeed}}s;">
+        {{danmuData.text || '弹幕文本'}}
+      </view>
+    </block>
+    <block wx:elif="{{danmuData.effect === 'gradient'}}">
+      <view class="danmu-text gradient-text" 
+            style="color: {{danmuData.textColor}}; font-size: {{danmuData.fontSize}}rpx; animation-duration: {{11 - danmuData.effectSpeed}}s;">
+        {{danmuData.text || '弹幕文本'}}
+      </view>
+    </block>
+    <block wx:else>
+      <view class="danmu-text" 
+            style="color: {{danmuData.textColor || '#ffffff'}}; font-size: {{danmuData.fontSize || 36}}rpx;">
+        {{danmuData.text || '弹幕文本'}}
+      </view>
+    </block>
+  </view>
+</view>

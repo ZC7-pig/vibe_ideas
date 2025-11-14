@@ -1,0 +1,135 @@
+<!--pages/post/list.wxml-->
+<view class="page-container">
+  <!-- 筛选栏 -->
+  <view class="filter-container" wx:if="{{showFilter}}">
+    <scroll-view class="filter-scroll" scroll-x="true">
+      <view class="filter-item {{currentFilter === 'all' ? 'active' : ''}}" 
+            data-type="all" bindtap="onFilterChange">
+        全部
+      </view>
+      <view class="filter-item {{currentFilter === 'lost' ? 'active' : ''}}" 
+            data-type="lost" bindtap="onFilterChange">
+        寻宠
+      </view>
+      <view class="filter-item {{currentFilter === 'found' ? 'active' : ''}}" 
+            data-type="found" bindtap="onFilterChange">
+        发现
+      </view>
+      <view class="filter-item {{currentFilter === 'foster' ? 'active' : ''}}" 
+            data-type="foster" bindtap="onFilterChange">
+        寄养
+      </view>
+      <view class="filter-item {{currentFilter === 'breed' ? 'active' : ''}}" 
+            data-type="breed" bindtap="onFilterChange">
+        配种
+      </view>
+      <view class="filter-item {{currentFilter === 'adopt' ? 'active' : ''}}" 
+            data-type="adopt" bindtap="onFilterChange">
+        收养
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 帖子列表 -->
+  <view class="posts-container">
+    <block wx:if="{{loading}}">
+      <view class="loading">
+        <text>加载中...</text>
+      </view>
+    </block>
+    
+    <block wx:elif="{{posts.length > 0}}">
+      <view class="post-item" 
+            wx:for="{{posts}}" 
+            wx:key="_id"
+            bindtap="onPostTap"
+            data-id="{{item._id}}">
+        
+        <view class="post-card">
+          <!-- 帖子头部 -->
+          <view class="post-header">
+            <view class="post-type-tag {{item.type}}">{{item.typeText}}</view>
+            <view class="post-status {{item.status || 'active'}}">
+              {{item.statusText || '进行中'}}
+            </view>
+            <view class="post-actions" wx:if="{{listType === 'my'}}">
+              <icon type="more" size="16" color="#999" bindtap="onMoreTap" data-id="{{item._id}}" catchtap="true"></icon>
+            </view>
+          </view>
+
+          <!-- 帖子内容 -->
+          <view class="post-content">
+            <text class="post-title">{{item.title}}</text>
+            <view class="post-meta">
+              <text class="meta-item">{{item.breed}}</text>
+              <text class="meta-item">{{item.color}}</text>
+              <text class="meta-item">{{item.location.name}}</text>
+            </view>
+          </view>
+
+          <!-- 帖子图片 -->
+          <view class="post-images" wx:if="{{item.images.length > 0}}">
+            <image 
+              class="post-image" 
+              src="{{item.images[0]}}" 
+              mode="aspectFill"
+              lazy-load="true">
+            </image>
+            <view class="image-count" wx:if="{{item.images.length > 1}}">
+              +{{item.images.length - 1}}
+            </view>
+          </view>
+
+          <!-- 帖子底部 -->
+          <view class="post-footer">
+            <text class="post-time">{{item.createTimeText}}</text>
+            <view class="post-stats">
+              <text class="stat-item">浏览 {{item.viewCount || 0}}</text>
+              <text class="stat-item" wx:if="{{item.matchCount}}">匹配 {{item.matchCount}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </block>
+
+    <block wx:else>
+      <view class="empty-state">
+        <text class="empty-icon">📝</text>
+        <text class="empty-text">{{emptyText}}</text>
+        <text class="empty-desc">{{emptyDesc}}</text>
+        <button class="empty-btn" bindtap="onEmptyAction" wx:if="{{showEmptyAction}}">
+          {{emptyActionText}}
+        </button>
+      </view>
+    </block>
+  </view>
+
+  <!-- 加载更多 -->
+  <view class="load-more" wx:if="{{hasMore && !loading}}">
+    <text bindtap="loadMore">加载更多</text>
+  </view>
+
+  <!-- 操作菜单 -->
+  <view class="action-sheet" wx:if="{{showActionSheet}}" bindtap="onCloseActionSheet">
+    <view class="action-content" catchtap="stopPropagation">
+      <view class="action-header">
+        <text class="action-title">选择操作</text>
+        <icon class="action-close" type="cancel" size="20" bindtap="onCloseActionSheet"></icon>
+      </view>
+      <view class="action-list">
+        <view class="action-item" bindtap="onEditPost">
+          <icon type="edit" size="16"></icon>
+          <text>编辑</text>
+        </view>
+        <view class="action-item" bindtap="onSharePost">
+          <icon type="download" size="16"></icon>
+          <text>分享</text>
+        </view>
+        <view class="action-item danger" bindtap="onDeletePost">
+          <icon type="cancel" size="16"></icon>
+          <text>删除</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

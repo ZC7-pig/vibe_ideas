@@ -1,0 +1,290 @@
+<!--pages/publish/publish.wxml-->
+<view class="container">
+  <form bindsubmit="submitPost">
+    <!-- 帖子类型选择 -->
+    <view class="section">
+      <view class="section-title">帖子类型</view>
+      <view class="type-selector">
+        <view 
+          wx:for="{{postTypes}}" 
+          wx:key="value"
+          class="type-item {{selectedType === item.value ? 'active' : ''}}"
+          bindtap="selectType"
+          data-type="{{item.value}}"
+        >
+          <image class="type-icon" src="{{item.icon}}"></image>
+          <text class="type-text">{{item.label}}</text>
+          <text class="type-desc">{{item.desc}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 收养子类型选择 -->
+    <view class="section" wx:if="{{selectedType === 'adoption'}}">
+      <view class="section-title">收养类型</view>
+      <view class="sub-type-selector">
+        <view 
+          class="sub-type-item {{subType === 'offer' ? 'active' : ''}}"
+          bindtap="selectSubType"
+          data-subtype="offer"
+        >
+          <text>我要送养</text>
+        </view>
+        <view 
+          class="sub-type-item {{subType === 'wanted' ? 'active' : ''}}"
+          bindtap="selectSubType"
+          data-subtype="wanted"
+        >
+          <text>我想领养</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 基本信息 -->
+    <view class="section">
+      <view class="section-title">基本信息</view>
+      
+      <view class="input-group">
+        <view class="input-label required">标题</view>
+        <input 
+          class="input" 
+          placeholder="请输入标题" 
+          value="{{formData.title}}"
+          bindinput="onInputChange"
+          data-field="title"
+          maxlength="50"
+        />
+      </view>
+
+      <view class="input-group">
+        <view class="input-label">详细描述</view>
+        <textarea 
+          class="input textarea" 
+          placeholder="请详细描述情况..." 
+          value="{{formData.content}}"
+          bindinput="onInputChange"
+          data-field="content"
+          maxlength="500"
+        ></textarea>
+      </view>
+
+      <!-- 图片上传 -->
+      <view class="input-group">
+        <view class="input-label">上传图片</view>
+        <view class="image-upload">
+          <view 
+            wx:for="{{formData.images}}" 
+            wx:key="*this"
+            class="image-item"
+          >
+            <image class="uploaded-image" src="{{item}}" mode="aspectFill"></image>
+            <view class="image-delete" bindtap="deleteImage" data-index="{{index}}">
+              <image src="/images/close.png"></image>
+            </view>
+          </view>
+          <view 
+            wx:if="{{formData.images.length < 9}}"
+            class="image-add" 
+            bindtap="chooseImage"
+          >
+            <image src="/images/camera.png"></image>
+            <text>添加图片</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 宠物信息（非普通交流帖） -->
+    <view class="section" wx:if="{{selectedType !== 'normal'}}">
+      <view class="section-title">宠物信息</view>
+      
+      <view class="input-group">
+        <view class="input-label required">品种</view>
+        <picker 
+          mode="selector" 
+          range="{{breeds}}" 
+          value="{{breedIndex}}"
+          bindchange="onBreedChange"
+        >
+          <view class="picker">
+            {{formData.breed || '请选择品种'}}
+          </view>
+        </picker>
+      </view>
+
+      <view class="input-group">
+        <view class="input-label required">毛色</view>
+        <picker 
+          mode="selector" 
+          range="{{colors}}" 
+          value="{{colorIndex}}"
+          bindchange="onColorChange"
+        >
+          <view class="picker">
+            {{formData.color || '请选择毛色'}}
+          </view>
+        </picker>
+      </view>
+
+      <view class="input-group">
+        <view class="input-label required">性别</view>
+        <view class="radio-group">
+          <label class="radio-item">
+            <radio 
+              value="male" 
+              checked="{{formData.sex === 'male'}}"
+              bindtap="onSexChange"
+              data-sex="male"
+            />
+            <text>公</text>
+          </label>
+          <label class="radio-item">
+            <radio 
+              value="female" 
+              checked="{{formData.sex === 'female'}}"
+              bindtap="onSexChange"
+              data-sex="female"
+            />
+            <text>母</text>
+          </label>
+          <label class="radio-item">
+            <radio 
+              value="unknown" 
+              checked="{{formData.sex === 'unknown'}}"
+              bindtap="onSexChange"
+              data-sex="unknown"
+            />
+            <text>未知</text>
+          </label>
+        </view>
+      </view>
+
+      <view class="input-group">
+        <view class="input-label required">年龄</view>
+        <picker 
+          mode="selector" 
+          range="{{ages}}" 
+          value="{{ageIndex}}"
+          bindchange="onAgeChange"
+        >
+          <view class="picker">
+            {{formData.age || '请选择年龄'}}
+          </view>
+        </picker>
+      </view>
+
+      <view class="input-group">
+        <view class="input-label">特殊需求</view>
+        <input 
+          class="input" 
+          placeholder="如：有芯片、疾病史、需长期护理等" 
+          value="{{formData.specialNeeds}}"
+          bindinput="onInputChange"
+          data-field="specialNeeds"
+          maxlength="100"
+        />
+      </view>
+
+      <view class="input-group">
+        <view class="input-label required">发生时间</view>
+        <picker 
+          mode="date" 
+          value="{{formData.eventDate}}"
+          bindchange="onEventDateChange"
+        >
+          <view class="picker">
+            {{formData.eventDate || '请选择日期'}}
+          </view>
+        </picker>
+      </view>
+
+      <view class="input-group">
+        <view class="input-label required">匹配半径</view>
+        <picker 
+          mode="selector" 
+          range="{{radiusOptions}}" 
+          range-key="label"
+          value="{{radiusIndex}}"
+          bindchange="onRadiusChange"
+        >
+          <view class="picker">
+            {{formData.radiusKm ? formData.radiusKm + '公里' : '请选择范围'}}
+          </view>
+        </picker>
+      </view>
+
+      <view class="input-group">
+        <view class="input-label required">有效期</view>
+        <picker 
+          mode="selector" 
+          range="{{expireOptions}}" 
+          range-key="label"
+          value="{{expireIndex}}"
+          bindchange="onExpireChange"
+        >
+          <view class="picker">
+            {{selectedExpireOption ? selectedExpireOption.label : '请选择有效期'}}
+          </view>
+        </picker>
+      </view>
+    </view>
+
+    <!-- 位置信息 -->
+    <view class="section">
+      <view class="section-title">位置信息</view>
+      
+      <view class="input-group">
+        <view class="input-label required">地点</view>
+        <view class="location-selector" bindtap="chooseLocation">
+          <text class="location-text">{{formData.location ? formData.location.address : '请选择地点'}}</text>
+          <image class="location-icon" src="/images/location.png"></image>
+        </view>
+      </view>
+    </view>
+
+    <!-- 联系方式 -->
+    <view class="section">
+      <view class="section-title">联系方式</view>
+      
+      <view class="input-group">
+        <view class="input-label">手机号</view>
+        <input 
+          class="input" 
+          placeholder="请输入手机号" 
+          value="{{formData.contact.phone}}"
+          bindinput="onContactChange"
+          data-field="phone"
+          type="number"
+          maxlength="11"
+        />
+      </view>
+
+      <view class="input-group">
+        <view class="input-label">微信号</view>
+        <input 
+          class="input" 
+          placeholder="请输入微信号" 
+          value="{{formData.contact.wechat}}"
+          bindinput="onContactChange"
+          data-field="wechat"
+          maxlength="20"
+        />
+      </view>
+
+      <view class="contact-tip">
+        <text>至少填写一种联系方式</text>
+      </view>
+    </view>
+
+    <!-- 提交按钮 -->
+    <view class="submit-section">
+      <button 
+        class="btn btn-primary btn-large btn-block"
+        form-type="submit"
+        disabled="{{submitting}}"
+      >
+        {{submitting ? '发布中...' : '发布'}}
+      </button>
+    </view>
+  </form>
+</view>

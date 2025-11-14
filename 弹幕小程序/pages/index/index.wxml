@@ -1,0 +1,18 @@
+<!--index.wxml-->
+<view class="container">
+  <view class="header">
+    <view class="title">{{motto}}</view>
+    <view class="desc">线下活动必备神器</view>
+  </view>
+  
+  <view class="menu">
+    <view class="btn btn-primary" bindtap="goToEdit">创建弹幕</view>
+    <view class="btn btn-default" bindtap="goToHistory">我的弹幕</view>
+    <view class="btn btn-default" bindtap="goToGroup">多人联动</view>
+    <view class="btn btn-default" bindtap="goToSettings">设置</view>
+  </view>
+  
+  <view class="footer">
+    <text>适用于演唱会、活动等场景</text>
+  </view>
+</view>

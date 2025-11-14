@@ -1,0 +1,207 @@
+<!--pages/detail/detail.wxml-->
+<view class="container" wx:if="{{post}}">
+  <!-- 帖子头部 -->
+  <view class="post-header">
+    <view class="author-info">
+      <image class="avatar" src="{{post.author.avatarUrl || '/images/default-avatar.png'}}"></image>
+      <view class="author-details">
+        <text class="author-name">{{post.author.nickName}}</text>
+        <text class="post-time">{{post.relativeTime}}</text>
+      </view>
+    </view>
+    <view class="post-type-tag tag-{{post.type}}">
+      {{post.typeText}}
+    </view>
+  </view>
+
+  <!-- 帖子内容 -->
+  <view class="post-content">
+    <text class="post-title">{{post.title}}</text>
+    <text class="post-desc" wx:if="{{post.content}}">{{post.content}}</text>
+  </view>
+
+  <!-- 帖子图片 -->
+  <view class="post-images" wx:if="{{post.images && post.images.length > 0}}">
+    <swiper 
+      class="image-swiper" 
+      indicator-dots="{{post.images.length > 1}}"
+      indicator-color="rgba(255,255,255,0.5)"
+      indicator-active-color="#ffffff"
+      autoplay="false"
+      circular="true"
+    >
+      <swiper-item wx:for="{{post.images}}" wx:key="*this">
+        <image 
+          class="swiper-image" 
+          src="{{item}}" 
+          mode="aspectFit"
+          bindtap="previewImage"
+          data-current="{{item}}"
+          data-urls="{{post.images}}"
+        ></image>
+      </swiper-item>
+    </swiper>
+  </view>
+
+  <!-- 宠物信息 -->
+  <view class="pet-info" wx:if="{{post.type !== 'normal'}}">
+    <view class="info-title">宠物信息</view>
+    <view class="info-grid">
+      <view class="info-item" wx:if="{{post.breed}}">
+        <text class="info-label">品种</text>
+        <text class="info-value">{{post.breed}}</text>
+      </view>
+      <view class="info-item" wx:if="{{post.color}}">
+        <text class="info-label">毛色</text>
+        <text class="info-value">{{post.color}}</text>
+      </view>
+      <view class="info-item" wx:if="{{post.sex && post.sex !== 'unknown'}}">
+        <text class="info-label">性别</text>
+        <text class="info-value">{{post.sexText}}</text>
+      </view>
+      <view class="info-item" wx:if="{{post.age}}">
+        <text class="info-label">年龄</text>
+        <text class="info-value">{{post.age}}</text>
+      </view>
+      <view class="info-item" wx:if="{{post.eventDate}}">
+        <text class="info-label">{{post.type === 'lost' ? '走失时间' : post.type === 'found' ? '发现时间' : '相关时间'}}</text>
+        <text class="info-value">{{post.eventDateText}}</text>
+      </view>
+      <view class="info-item" wx:if="{{post.specialNeeds}}">
+        <text class="info-label">特殊需求</text>
+        <text class="info-value">{{post.specialNeeds}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 位置信息 -->
+  <view class="location-info" wx:if="{{post.location}}">
+    <view class="info-title">位置信息</view>
+    <view class="location-content" bindtap="openLocation">
+      <image class="location-icon" src="/images/location.png"></image>
+      <view class="location-details">
+        <text class="location-address">{{post.location.address}}</text>
+        <text class="location-distance" wx:if="{{post.distance}}">距离您 {{post.distance}}</text>
+      </view>
+      <image class="arrow-icon" src="/images/arrow-right.png"></image>
+    </view>
+  </view>
+
+  <!-- 有效期信息 -->
+  <view class="expire-info" wx:if="{{post.expireAt}}">
+    <view class="expire-content">
+      <image class="expire-icon" src="/images/time.png"></image>
+      <text class="expire-text">{{post.expireText}}</text>
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="action-buttons">
+    <button class="btn btn-secondary" bindtap="toggleLike">
+      <image class="btn-icon" src="/images/{{post.liked ? 'heart-filled' : 'heart'}}.png"></image>
+      <text>{{post.liked ? '已收藏' : '收藏'}} ({{post.likeCount || 0}})</text>
+    </button>
+    <button class="btn btn-primary" bindtap="contactAuthor">
+      <image class="btn-icon" src="/images/contact.png"></image>
+      <text>联系Ta</text>
+    </button>
+  </view>
+
+  <!-- 相似推荐 -->
+  <view class="similar-posts" wx:if="{{similarPosts.length > 0}}">
+    <view class="section-title">相似推荐</view>
+    <scroll-view class="similar-list" scroll-x="true">
+      <view 
+        wx:for="{{similarPosts}}" 
+        wx:key="_id"
+        class="similar-item"
+        bindtap="goToDetail"
+        data-id="{{item._id}}"
+      >
+        <image class="similar-image" src="{{item.images[0] || '/images/default-pet.png'}}" mode="aspectFill"></image>
+        <text class="similar-title">{{item.title}}</text>
+        <text class="similar-info">{{item.breed}} · {{item.color}}</text>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 评论区 -->
+  <view class="comments-section">
+    <view class="section-title">评论 ({{comments.length}})</view>
+    
+    <!-- 评论输入 -->
+    <view class="comment-input-area" wx:if="{{isLoggedIn}}">
+      <textarea 
+        class="comment-input" 
+        placeholder="写下你的评论..." 
+        value="{{commentText}}"
+        bindinput="onCommentInput"
+        maxlength="200"
+      ></textarea>
+      <button 
+        class="comment-submit" 
+        bindtap="submitComment"
+        disabled="{{!commentText.trim() || submittingComment}}"
+      >
+        {{submittingComment ? '发送中' : '发送'}}
+      </button>
+    </view>
+
+    <view class="login-tip" wx:else>
+      <text>请先</text>
+      <text class="login-link" bindtap="goToLogin">登录</text>
+      <text>后评论</text>
+    </view>
+
+    <!-- 评论列表 -->
+    <view class="comments-list">
+      <view wx:if="{{comments.length === 0}}" class="empty-comments">
+        <text>暂无评论，快来抢沙发吧~</text>
+      </view>
+
+      <view wx:for="{{comments}}" wx:key="_id" class="comment-item">
+        <image class="comment-avatar" src="{{item.author.avatarUrl || '/images/default-avatar.png'}}"></image>
+        <view class="comment-content">
+          <view class="comment-header">
+            <text class="comment-author">{{item.author.nickName}}</text>
+            <text class="comment-time">{{item.relativeTime}}</text>
+          </view>
+          <text class="comment-text">{{item.content}}</text>
+          <view class="comment-images" wx:if="{{item.images && item.images.length > 0}}">
+            <image 
+              wx:for="{{item.images}}" 
+              wx:for-item="image" 
+              wx:key="*this"
+              class="comment-image" 
+              src="{{image}}" 
+              mode="aspectFill"
+              bindtap="previewImage"
+              data-current="{{image}}"
+              data-urls="{{item.images}}"
+            ></image>
+          </view>
+        </view>
+        <view class="comment-actions" wx:if="{{item.author._id === userId}}">
+          <text class="delete-comment" bindtap="deleteComment" data-id="{{item._id}}">删除</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 加载更多评论 -->
+    <view class="load-more-comments" wx:if="{{!noMoreComments && comments.length > 0}}" bindtap="loadMoreComments">
+      <text>{{loadingComments ? '加载中...' : '加载更多评论'}}</text>
+    </view>
+  </view>
+</view>
+
+<!-- 加载状态 -->
+<view class="loading-container" wx:if="{{loading}}">
+  <text>加载中...</text>
+</view>
+
+<!-- 错误状态 -->
+<view class="error-container" wx:if="{{error}}">
+  <image class="error-icon" src="/images/error.png"></image>
+  <text class="error-text">{{error}}</text>
+  <button class="btn btn-primary" bindtap="reload">重新加载</button>
+</view>

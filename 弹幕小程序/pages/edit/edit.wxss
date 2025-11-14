@@ -1,0 +1,111 @@
+/**edit.wxss**/
+.container {
+  padding: 20rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  margin: 20rpx 0;
+}
+
+.edit-section, .style-section, .effect-section, .preview-section, .action-section {
+  width: 100%;
+  margin-bottom: 30rpx;
+}
+
+.danmu-input {
+  width: 100%;
+  height: 150rpx;
+  border: 1px solid #ddd;
+  border-radius: 8rpx;
+  padding: 20rpx;
+  box-sizing: border-box;
+  font-size: 32rpx;
+}
+
+.common-phrases {
+  margin-top: 20rpx;
+}
+
+.phrases-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.phrase-item {
+  padding: 10rpx 20rpx;
+  background-color: #f8f8f8;
+  border-radius: 30rpx;
+  margin: 10rpx;
+  font-size: 28rpx;
+}
+
+.style-item {
+  margin-bottom: 20rpx;
+}
+
+.item-title {
+  font-size: 28rpx;
+  margin-bottom: 10rpx;
+}
+
+.color-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.font-size-control {
+  display: flex;
+  align-items: center;
+}
+
+.control-btn {
+  width: 60rpx;
+  height: 60rpx;
+  line-height: 60rpx;
+  text-align: center;
+  background-color: #f8f8f8;
+  border-radius: 30rpx;
+  font-size: 36rpx;
+  font-weight: bold;
+}
+
+.font-size-value {
+  width: 80rpx;
+  text-align: center;
+  margin: 0 20rpx;
+  font-size: 32rpx;
+}
+
+.picker {
+  padding: 20rpx;
+  background-color: #f8f8f8;
+  border-radius: 8rpx;
+}
+
+.preview-box {
+  width: 100%;
+  height: 200rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8rpx;
+  overflow: hidden;
+}
+
+.preview-text {
+  font-weight: bold;
+  text-align: center;
+  word-break: break-all;
+  padding: 20rpx;
+}
+
+.action-section {
+  display: flex;
+  justify-content: space-between;
+}
+
+.action-section .btn {
+  width: 45%;
+}

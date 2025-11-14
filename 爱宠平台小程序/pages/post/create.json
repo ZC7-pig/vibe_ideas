@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "发布信息",
+  "backgroundTextStyle": "dark",
+  "usingComponents": {
+    "location-picker": "../../components/location-picker/location-picker"
+  }
+}
